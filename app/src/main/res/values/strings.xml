@@ -1,0 +1,16 @@
+<resources>
+    <string name="app_name">StackCardRecyclerView</string>
+
+    <string name="vertical">vertical</string>
+    <string name="horizontal">horizontal</string>
+    <string name="both">both</string>
+
+    <string name="change_stack">change_stack_order</string>
+    <string name="change_number">change_number_order</string>
+
+    <string name="in_stack">in_stack</string>
+    <string name="out_stack">out_stack</string>
+    <string name="negative">negative</string>
+    <string name="positive">positive</string>
+
+</resources>
