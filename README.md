@@ -90,7 +90,7 @@ you can change this order
 
 * 1.overView need fix(it is low speed when i use big bitmap)
 * 2.need more faster (although it have fast scroll,when i scroll more faster the view aren't so fast)
-* 3.my english :)
+* 3.my english : )
 
 #### License ####
 
