@@ -12,6 +12,8 @@ this is RecyclerView like S7 Recent task
 <img src="./img/gif_h_f.gif" width = "180" height = "300" />
 <img src="./img/gif_h_l.gif" width = "180" height = "300"  />
 
+thanks for [CarouselLayoutManager](https://github.com/Azoft/CarouselLayoutManager) , I use his framework,but change a lot of layout , add can't scroll effect;
+
 ### There have two type Vertical and Horizontal ###
 <br/> 
 <img src="./img/v_c_exp.jpg" width = "180" height = "300" />
@@ -23,11 +25,13 @@ this is RecyclerView like S7 Recent task
 
  * 1.in stack order, positive 
  * 2.out stack order, positive
+<br/>
 <img src="./img/h_in_p.jpg" width = "180" height = "300" />
 <img src="./img/h_out_p.jpg" width = "180" height = "300"  />
 
  * 3.in stack order, negative 
  * 4.out stack order, negative
+<br/>
 <img src="./img/h_in_n.jpg" width = "180" height = "300" />
 <img src="./img/h_out_n.jpg" width = "180" height = "300"  />
 
@@ -37,6 +41,7 @@ It will be less count when width is bigger than height in Vertical layout and he
 
  * 1.less have 7 item
  * 2.more have 9 item
+<br/>
 <img src="./img/v_less.jpg" width = "300" height = "180" align=top />
 <img src="./img/v_c_exp.jpg" width = "180" height = "300"  /> 
 
@@ -52,6 +57,7 @@ you can change this order
 ```
 
 - add swip and swip listener 
+<br/>
 <img src="./img/gif_swip.gif" width = "180" height = "300"  />
 ``` java
           ItemTouchHelperCallBack itemTouchHelperCallBack = new ItemTouchHelperCallBack();
@@ -61,6 +67,7 @@ you can change this order
 ```
 
 - add scroll to position and center listener 
+<br/>
 <img src="./img/h_scroll2p.gif" width = "180" height = "300"  />
 ``` java
           // enable center post touching on item and item click listener
@@ -74,3 +81,22 @@ you can change this order
             }
         }, recyclerView, layoutManager);                
 ```
+
+### Support (支持) ###
+- Please do not send e-mail to me. Public technical discussion on github is preferred.
+- 请尽量在 github 上公开讨论[技术问题](https://github.com/ckenergy/StackCardRecyclerView/issues)，不要以邮件方式私下询问。
+
+#### License ####
+
+	Copyright 2016 ckenergy <ckenergy@qq.com>
+    Licensed under the Apache License, Version 2.0 (the "License");
+    you may not use this file except in compliance with the License.
+    You may obtain a copy of the License at
+
+       http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing, software
+    distributed under the License is distributed on an "AS IS" BASIS,
+    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+    See the License for the specific language governing permissions and
+    limitations under the License.
