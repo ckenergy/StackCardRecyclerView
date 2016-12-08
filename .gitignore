@@ -1,6 +1,4 @@
 *.iml
-/.idea/workspace.xml
-/.idea/libraries
 .DS_Store
 
 # Built application files
@@ -12,10 +10,6 @@
 
 # Java class files
 *.class
-
-# Generated files
-bin/
-gen/
 
 # Gradle files
 .gradle/
@@ -35,3 +29,18 @@ proguard/
 
 # Android Studio captures folder
 captures/
+
+# Generated files
+bin/
+gen/
+out/
+
+# Log Files
+*.log
+
+# Intellij
+*.iml
+.idea/
+
+# Keystore files
+*.jks
