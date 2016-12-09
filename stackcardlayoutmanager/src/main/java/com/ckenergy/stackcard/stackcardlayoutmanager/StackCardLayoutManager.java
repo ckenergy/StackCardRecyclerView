@@ -1,6 +1,9 @@
 package com.ckenergy.stackcard.stackcardlayoutmanager;
 
+import android.annotation.TargetApi;
 import android.graphics.PointF;
+import android.graphics.Rect;
+import android.os.Build;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Parcel;
@@ -11,6 +14,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.view.ViewCompat;
 import android.support.v7.widget.OrientationHelper;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -20,7 +24,7 @@ import java.util.Iterator;
 import java.util.List;
 
 /**
- * An implementation of {@link RecyclerView.LayoutManager} that layout items like StackCard.
+ * An implementation of {@link RecyclerView.LayoutManager} that layout items like Stack Card.
  * Generally there is one center item and bellow this item there are maximum {@link StackCardLayoutManager#getMaxVisibleItems()} items on each side of the center
  * item. By default {@link StackCardLayoutManager#getMaxVisibleItems()} is {@link StackCardLayoutManager#MAX_VISIBLE_ITEMS}.<br />
  * <br />
@@ -104,6 +108,7 @@ public class StackCardLayoutManager extends RecyclerView.LayoutManager {
     private int centerViewStart;
 
     /**
+     * implements {@link IPostLayout} to how layout item
      * @param orientation should be {@link #VERTICAL} or {@link #HORIZONTAL}
      */
     public StackCardLayoutManager(final int orientation, @NonNull IPostLayout iPostLayout) {
@@ -251,7 +256,24 @@ public class StackCardLayoutManager extends RecyclerView.LayoutManager {
     @Override
     public void onAttachedToWindow(final RecyclerView recyclerView) {
         super.onAttachedToWindow(recyclerView);
+
         recyclerView.setOverScrollMode(View.OVER_SCROLL_NEVER);//remove the can't scroll effect
+        Log.d(TAG,"sdk:"+Build.VERSION.SDK_INT);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            setOutLine(recyclerView);
+        }
+    }
+
+    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
+    private void setOutLine(RecyclerView recyclerView) {
+        ChildViewOutlineProvider outlineProvider = new ChildViewOutlineProvider();
+        int count = recyclerView.getChildCount();
+        for(int i = 0; i<count;i++) {
+            View view = recyclerView.getChildAt(i);
+            if(view != null) {
+                view.setOutlineProvider(outlineProvider);
+            }
+        }
     }
 
     /**
@@ -577,9 +599,24 @@ public class StackCardLayoutManager extends RecyclerView.LayoutManager {
         }
     }
 
-    private void fillChildItem(final int start, final int top, final int end, final int bottom, @NonNull final LayoutOrder layoutOrder, @NonNull final RecyclerView.Recycler recycler, final int i, final boolean childMeasuringNeeded) {
+    private void fillChildItem(final int start, final int top, final int end, final int bottom, @NonNull final LayoutOrder layoutOrder,
+                               @NonNull final RecyclerView.Recycler recycler, final int i, final boolean childMeasuringNeeded) {
         final View view = bindChild(layoutOrder.mItemAdapterPosition, recycler, childMeasuringNeeded);
+        Log.d(TAG,"mItemAdapterPosition:"+layoutOrder.mItemAdapterPosition);
         ViewCompat.setElevation(view, i);
+
+        /*if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            if (view.getClipToOutline()) {
+
+            }
+            Log.d(TAG,"outline:"+view.getOutlineProvider());
+            view.setClipToOutline(true);
+        }*/
+        /*if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2) {
+            Rect rect = new Rect(view.getLeft(),view.getTop(),view.getLeft()+view.getWidth()/2,view.getTop()+view.getHeight()/2);
+            view.setClipBounds(rect);
+        }*/
+
         ItemTransformation transformation = null;
         if (null != mViewPostLayout) {
             transformation = mViewPostLayout.transformChild(this, layoutOrder.mItemPositionDiff, mOrientation);
@@ -590,26 +627,58 @@ public class StackCardLayoutManager extends RecyclerView.LayoutManager {
         } else {
             float scaleX = transformation.mScaleX*baseScale;
             float scaleY = transformation.mScaleY*baseScale;
+            Rect rect;
             if (getOrientation() == VERTICAL) {
-                if (getStackOrder() * getNumberOrder()<0) {
+                int height = transformation.mClipLength;
+                if (getStackOrder() * getNumberOrder() < 0) {
+                    rect = new Rect(0,view.getHeight()-height,view.getWidth(),view.getHeight());
                     ViewCompat.setPivotX(view,view.getMeasuredWidth()/2);
                     ViewCompat.setPivotY(view,view.getMeasuredHeight());
                 }else {
+                    rect = new Rect(0,0,view.getWidth(),height);
                     ViewCompat.setPivotX(view, view.getMeasuredWidth()/2);
                     ViewCompat.setPivotY(view, 0);
                 }
 
             }else {
+                int width = transformation.mClipLength;
                 if (getStackOrder() * getNumberOrder() < 0) {
+                    rect = new Rect(view.getWidth()-width,0,view.getWidth(),view.getHeight());
                     ViewCompat.setPivotX(view,view.getMeasuredWidth());
                     ViewCompat.setPivotY(view,view.getMeasuredHeight()/2);
                 }else {
+                    rect = new Rect(0,0,width,view.getHeight());
                     ViewCompat.setPivotX(view,0);
                     ViewCompat.setPivotY(view,view.getMeasuredHeight()/2);
                 }
             }
             ViewCompat.setScaleX(view, scaleX);
             ViewCompat.setScaleY(view, scaleY);
+
+            if (!mCircleLayout) {
+                boolean noNeedClip = ((getStackOrder() == IN_STACK_ORDER && layoutOrder.mItemAdapterPosition == getItemCount()-1) ||
+                        (getStackOrder() == OUT_STACK_ORDER && layoutOrder.mItemAdapterPosition == 0));
+                if (noNeedClip) {
+                    rect = new Rect(0, 0, view.getWidth(),view.getHeight());
+                /*if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2) {
+                    view.setClipBounds(rect);
+                }*/
+//                    ViewGroupCompat.LAYOUT_MODE_CLIP_BOUNDS
+                }
+            }
+            /*if (view instanceof ViewGroup) {
+                ViewGroup viewGroup = (ViewGroup) view;
+                viewGroup.setClipChildren(true);
+                ViewGroupCompat.setLayoutMode(viewGroup,ViewGroupCompat.LAYOUT_MODE_CLIP_BOUNDS);
+                *//*if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2) {
+                    viewGroup.setClipBounds(rect);
+                }*//*
+                ViewCompat.setClipBounds(view,rect);
+            }else {
+
+            }*/
+            ViewCompat.setClipBounds(view,rect);
+
 
             int translationX = transformation.mTranslationX*getStackOrder()*getNumberOrder();
             int translationY = transformation.mTranslationY*getStackOrder()*getNumberOrder();
@@ -740,6 +809,8 @@ public class StackCardLayoutManager extends RecyclerView.LayoutManager {
             }
         }
 
+        Log.d(TAG,"bindChild");
+
         return view;
     }
 
@@ -820,7 +891,6 @@ public class StackCardLayoutManager extends RecyclerView.LayoutManager {
     public void onRestoreInstanceState(final Parcelable state) {
         if (state instanceof StackCardSavedState) {
             mPendingStackCardSavedState = (StackCardSavedState) state;
-
             super.onRestoreInstanceState(mPendingStackCardSavedState.mSuperState);
         } else {
             super.onRestoreInstanceState(state);

@@ -10,6 +10,11 @@ public class StackCardPostLayout implements StackCardLayoutManager.IPostLayout {
 
     private boolean isLessType = false;
 
+    private int smallDistance;
+    private int mediumDistance;
+    private int bigDistance;
+
+
     public int getCenterViewOffset(@NonNull StackCardLayoutManager layoutManager, int length) {
         int mediumCount = isLessType ? 1 : 2;
 
@@ -21,6 +26,10 @@ public class StackCardPostLayout implements StackCardLayoutManager.IPostLayout {
         if (layoutManager.getStackOrder() * layoutManager.getNumberOrder() < 0) {
             centerViewStart = length-layoutManager.getScrollItemSize()-centerViewStart;
         }
+
+        smallDistance = Math.round(length/getSmallDistanceRatio()/layoutManager.getBaseScale());
+        mediumDistance = Math.round(length/getMediumDistanceRatio()/layoutManager.getBaseScale());
+        bigDistance = Math.round(length/getBigDistanceRatio()/layoutManager.getBaseScale());
         return centerViewStart;
     }
 
@@ -91,6 +100,7 @@ public class StackCardPostLayout implements StackCardLayoutManager.IPostLayout {
 //        Log.d("transformChild","height:"+height);
         int changePosition = isLessType ? 1 : 2;
         float ratio;
+        int clipLength;
 
         /**
          * use the x instead of itemPositionToCenterDiff ,y instead of ratio
@@ -109,6 +119,24 @@ public class StackCardPostLayout implements StackCardLayoutManager.IPostLayout {
          *  there is different at moreType the MediumDistanceRatio only one item
          *
          */
+        /*if(itemPositionToCenterDiff > 0) {
+            clipLength = bigDistance;
+        }else if (itemPositionToCenterDiff > -1&& itemPositionToCenterDiff < 0) {
+            clipLength = (int) ((itemPositionToCenterDiff+1)*height);
+        }else if (itemPositionToCenterDiff < -1 && itemPositionToCenterDiff > -2) {
+            clipLength = mediumDistance;
+        }else if (itemPositionToCenterDiff < -2 && itemPositionToCenterDiff >-3){
+            clipLength = (int) ((itemPositionToCenterDiff+3)*height);
+        }else if (itemPositionToCenterDiff < -3) {
+            clipLength = smallDistance;
+        }*/
+        if(itemPositionToCenterDiff <= -changePosition-1) {
+            clipLength = smallDistance;
+        }else if(itemPositionToCenterDiff <= -1 && itemPositionToCenterDiff > -changePosition-1) {
+            clipLength = mediumDistance;
+        }else {
+            clipLength = bigDistance;
+        }
         if (itemPositionToCenterDiff <= -changePosition) {
             ratio = ((itemPositionToCenterDiff+changePosition) / getSmallDistanceRatio()
                     -changePosition/getMediumDistanceRatio());
@@ -131,8 +159,9 @@ public class StackCardPostLayout implements StackCardLayoutManager.IPostLayout {
             alpha = 0;
         }
 
+        clipLength = Math.round(clipLength/scale);
 //        Log.d("StackCardPostLayout", "itemPositionToCenterDiff:"+itemPositionToCenterDiff+",alpha:"+alpha);
-        return new ItemTransformation(scale, scale, translateX, translateY, alpha);
+        return new ItemTransformation(scale, scale, translateX, translateY, clipLength, alpha);
     }
 
     public float getSmallDistanceRatio() {

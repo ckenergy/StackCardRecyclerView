@@ -2,6 +2,7 @@ package com.ckenergy.stackcard.stackcardlayoutmanager;
 
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
+import android.util.Log;
 
 /**
  * Created by chengkai on 2016/11/28.
@@ -11,7 +12,14 @@ public class ItemTouchHelperCallBack extends ItemTouchHelper.Callback {
     private onSwipListener mOnSwipListener;
 
     @Override
+    public void onMoved(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, int fromPos, RecyclerView.ViewHolder target, int toPos, int x, int y) {
+        super.onMoved(recyclerView, viewHolder, fromPos, target, toPos, x, y);
+        Log.d(getClass().getSimpleName(),"onMoved1");
+    }
+
+    @Override
     public int getMovementFlags(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder) {
+        Log.d(getClass().getSimpleName(),"getMovementFlags");
         final int dragFlags;
         final int swipeFlags;
         if (recyclerView.getLayoutManager() instanceof StackCardLayoutManager){
@@ -31,6 +39,7 @@ public class ItemTouchHelperCallBack extends ItemTouchHelper.Callback {
 
     @Override
     public boolean onMove(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, RecyclerView.ViewHolder target) {
+        Log.d(getClass().getSimpleName(),"onMoved2");
         return false;
     }
 
@@ -44,7 +53,7 @@ public class ItemTouchHelperCallBack extends ItemTouchHelper.Callback {
 
     @Override
     public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction) {
-//        Log.d("onSwiped","direction:"+direction);
+        Log.d("onSwiped","direction:"+direction);
         int position = viewHolder.getAdapterPosition();
         if (mOnSwipListener != null) {
             mOnSwipListener.onSwip(viewHolder,position);
