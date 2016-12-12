@@ -73,6 +73,13 @@ public class StackCardLayoutManager extends RecyclerView.LayoutManager {
     private int mStackOrder;
 
     private int mNumberOrder;
+
+    private boolean isRemoveLayout;
+
+    private int removeBelowPosition;
+
+//    private int removeBelowPosition;
+
 //    public static final float SMALL_DISTANCE_RATIO = 35f;
 //    public static final float MEDIUM_DISTANCE_RATIO = 12f;
 //    public static final float BIG_DISTANCE_RATIO = 2.5f;
@@ -599,23 +606,23 @@ public class StackCardLayoutManager extends RecyclerView.LayoutManager {
         }
     }
 
+    @Override
+    public void onItemsRemoved(RecyclerView recyclerView, int positionStart, int itemCount) {
+        super.onItemsRemoved(recyclerView, positionStart, itemCount);
+        isRemoveLayout = true;
+        if (getNumberOrder() == POSITIVE_ORDER) {
+            removeBelowPosition = positionStart - 1;
+        }else {
+            removeBelowPosition = positionStart + 1;
+        }
+        Log.d(TAG,"onItemsRemoved:"+removeBelowPosition);
+    }
+
     private void fillChildItem(final int start, final int top, final int end, final int bottom, @NonNull final LayoutOrder layoutOrder,
                                @NonNull final RecyclerView.Recycler recycler, final int i, final boolean childMeasuringNeeded) {
         final View view = bindChild(layoutOrder.mItemAdapterPosition, recycler, childMeasuringNeeded);
         Log.d(TAG,"mItemAdapterPosition:"+layoutOrder.mItemAdapterPosition);
         ViewCompat.setElevation(view, i);
-
-        /*if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            if (view.getClipToOutline()) {
-
-            }
-            Log.d(TAG,"outline:"+view.getOutlineProvider());
-            view.setClipToOutline(true);
-        }*/
-        /*if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2) {
-            Rect rect = new Rect(view.getLeft(),view.getTop(),view.getLeft()+view.getWidth()/2,view.getTop()+view.getHeight()/2);
-            view.setClipBounds(rect);
-        }*/
 
         ItemTransformation transformation = null;
         if (null != mViewPostLayout) {
@@ -628,7 +635,9 @@ public class StackCardLayoutManager extends RecyclerView.LayoutManager {
             float scaleX = transformation.mScaleX*baseScale;
             float scaleY = transformation.mScaleY*baseScale;
             Rect rect;
-            if (getOrientation() == VERTICAL) {
+            if (transformation.mClipLength < 0) {
+                rect = new Rect(0,0,view.getWidth(),view.getHeight());
+            }else if (getOrientation() == VERTICAL) {
                 int height = transformation.mClipLength;
                 if (getStackOrder() * getNumberOrder() < 0) {
                     rect = new Rect(0,view.getHeight()-height,view.getWidth(),view.getHeight());
@@ -660,33 +669,35 @@ public class StackCardLayoutManager extends RecyclerView.LayoutManager {
                         (getStackOrder() == OUT_STACK_ORDER && layoutOrder.mItemAdapterPosition == 0));
                 if (noNeedClip) {
                     rect = new Rect(0, 0, view.getWidth(),view.getHeight());
-                /*if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2) {
-                    view.setClipBounds(rect);
-                }*/
-//                    ViewGroupCompat.LAYOUT_MODE_CLIP_BOUNDS
                 }
             }
-            /*if (view instanceof ViewGroup) {
-                ViewGroup viewGroup = (ViewGroup) view;
-                viewGroup.setClipChildren(true);
-                ViewGroupCompat.setLayoutMode(viewGroup,ViewGroupCompat.LAYOUT_MODE_CLIP_BOUNDS);
-                *//*if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2) {
-                    viewGroup.setClipBounds(rect);
-                }*//*
-                ViewCompat.setClipBounds(view,rect);
+            if (isRemoveLayout && removeBelowPosition == layoutOrder.mItemAdapterPosition) {
+                /*if (removeBelowPosition == layoutOrder.mItemAdapterPosition) {
+
+                }*//*else if (getNumberOrder() == POSITIVE_ORDER && removeBelowPosition < layoutOrder.mItemAdapterPosition) {
+
+                }*///else if (getNumberOrder() == NEGATIVE_ORDER && )
             }else {
-
-            }*/
-            ViewCompat.setClipBounds(view,rect);
-
+                ViewCompat.setClipBounds(view,rect);
+            }
 
             int translationX = transformation.mTranslationX*getStackOrder()*getNumberOrder();
             int translationY = transformation.mTranslationY*getStackOrder()*getNumberOrder();
             view.layout((start + translationX), (top + translationY), (end + translationX), (bottom + translationY));
 
-            ViewCompat.setAlpha(view, transformation.mAlpha);
+            ViewCompat.setAlpha(view, transformation.mAlpha);//todo not see
 
         }
+    }
+
+    @Override
+    public void onLayoutCompleted(RecyclerView.State state) {
+        super.onLayoutCompleted(state);
+        if (isRemoveLayout) {
+            isRemoveLayout = false;
+
+        }
+        Log.d(TAG,"onLayoutCompleted");
     }
 
     /**

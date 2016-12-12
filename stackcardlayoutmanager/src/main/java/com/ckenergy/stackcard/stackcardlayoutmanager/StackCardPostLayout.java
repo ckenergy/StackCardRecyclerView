@@ -160,7 +160,10 @@ public class StackCardPostLayout implements StackCardLayoutManager.IPostLayout {
         }
 
         clipLength = Math.round(clipLength/scale);
-//        Log.d("StackCardPostLayout", "itemPositionToCenterDiff:"+itemPositionToCenterDiff+",alpha:"+alpha);
+        /*if (isLessType && itemPositionToCenterDiff >= 1) {
+            clipLength = -1;
+        }*/
+        Log.d("StackCardPostLayout", "itemPositionToCenterDiff:"+itemPositionToCenterDiff+",alpha:"+alpha);
         return new ItemTransformation(scale, scale, translateX, translateY, clipLength, alpha);
     }
 

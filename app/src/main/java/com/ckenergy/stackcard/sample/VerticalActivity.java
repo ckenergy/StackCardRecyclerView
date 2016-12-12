@@ -15,7 +15,7 @@ public class VerticalActivity extends BaseActivity {
 
         RecyclerView recyclerView = (RecyclerView) findViewById(R.id.list);
 
-        StackCardLayoutManager stackCardLayoutManager = new StackCardLayoutManager(StackCardLayoutManager.VERTICAL,true, new StackCardPostLayout());
+        StackCardLayoutManager stackCardLayoutManager = new StackCardLayoutManager(StackCardLayoutManager.VERTICAL,false, new StackCardPostLayout());
         stackCardLayoutManager.setStackOrder(StackCardLayoutManager.OUT_STACK_ORDER);
         stackCardLayoutManager.setNumberOrder(StackCardLayoutManager.NEGATIVE_ORDER);
         RecyclerViewAdapter1 adapter = new RecyclerViewAdapter1(20);
