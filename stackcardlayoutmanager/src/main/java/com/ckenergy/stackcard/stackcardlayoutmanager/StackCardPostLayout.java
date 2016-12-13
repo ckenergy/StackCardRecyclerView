@@ -8,12 +8,15 @@ import android.util.Log;
  */
 public class StackCardPostLayout implements StackCardLayoutManager.IPostLayout {
 
+    private static final int BASE = 40;
+
     private boolean isLessType = false;
 
     private int smallDistance;
     private int mediumDistance;
     private int bigDistance;
 
+    private int moreOffset;
 
     public int getCenterViewOffset(@NonNull StackCardLayoutManager layoutManager, int length) {
         int mediumCount = isLessType ? 1 : 2;
@@ -69,6 +72,7 @@ public class StackCardPostLayout implements StackCardLayoutManager.IPostLayout {
                 isLessType = true;
             }
         }
+
         return baseScale;
     }
 
@@ -81,13 +85,14 @@ public class StackCardPostLayout implements StackCardLayoutManager.IPostLayout {
         }else {
             length = layoutManager.getWidthNoPadding();
         }
+        moreOffset = Math.round(1f/(BASE)*layoutManager.getScrollItemSize());
         return getCenterViewOffset(layoutManager, length);
     }
 
     @Override
     public ItemTransformation transformChild(@NonNull final StackCardLayoutManager layoutManager, final float itemPositionToCenterDiff, final int orientation) {
         Log.d(getClass().getSimpleName(),"transformChild");
-        int base=40;
+        int base = BASE;
         float itemDiff = Math.abs(itemPositionToCenterDiff-2.5f);
         final float scale = Math.min((base-itemDiff)/base, 1);
 //        Log.d("StackCardZoomPostLayoutListener","itemPositionToCenterDiff:"+itemPositionToCenterDiff);
@@ -155,14 +160,17 @@ public class StackCardPostLayout implements StackCardLayoutManager.IPostLayout {
         float alpha = 1;
         if(itemPositionToCenterDiff > -6 && itemPositionToCenterDiff < -2) {
             alpha = itemPositionToCenterDiff/4f+3f/2;
-        }else if(itemPositionToCenterDiff <= -6){
+        }else if(itemPositionToCenterDiff <= -6) {
             alpha = 0;
         }
 
-        clipLength = Math.round(clipLength/scale);
-        /*if (isLessType && itemPositionToCenterDiff >= 1) {
-            clipLength = -1;
+        clipLength = Math.round(clipLength/scale);// + moreOffset;
+        /*if (itemPositionToCenterDiff >= 0) {
+            clipLength += moreOffset;
         }*/
+        if (isLessType && itemPositionToCenterDiff >= 1) {
+            clipLength = -1;
+        }
         Log.d("StackCardPostLayout", "itemPositionToCenterDiff:"+itemPositionToCenterDiff+",alpha:"+alpha);
         return new ItemTransformation(scale, scale, translateX, translateY, clipLength, alpha);
     }

@@ -63,18 +63,21 @@ public class ItemTouchHelperCallBack extends ItemTouchHelper.Callback {
                 beforeBelowRect = ViewCompat.getClipBounds(belowView);
                 Rect belowRect;
                 if (layoutManager.getOrientation() == StackCardLayoutManager.HORIZONTAL) {
-                    Log.d(getClass().getSimpleName(),"current,width"+viewHolder.itemView.getWidth()+",height:"+viewHolder.itemView.getHeight()
-                    +",scale:"+viewHolder.itemView.getScaleY());
-                    Log.d(getClass().getSimpleName(),"below,width"+belowView.getWidth()+",height:"+belowView.getHeight()
-                            +",scale:"+belowView.getScaleY());
-                    float scale = viewHolder.itemView.getScaleY()/belowView.getScaleY();
-                    Log.d(getClass().getSimpleName(),"scale:"+scale);
-                    int width = Math.round(beforeCurrentRect.width()*scale);
-                    belowRect = new Rect(0, 0, beforeBelowRect.width()+width, beforeBelowRect.height());
+                    float scale = viewHolder.itemView.getScaleY() / belowView.getScaleY();
+                    int width = Math.round(beforeCurrentRect.width()*scale)+beforeBelowRect.width();
+                    if (layoutManager.getStackOrder() * layoutManager.getNumberOrder() < 0) {
+                        belowRect = new Rect(belowView.getWidth()-width, 0, belowView.getWidth(), beforeBelowRect.height());
+                    }else {
+                        belowRect = new Rect(0, 0, width, beforeBelowRect.height());
+                    }
                 }else {
                     float scale = viewHolder.itemView.getScaleX()/belowView.getScaleX();
-                    int height = Math.round(beforeCurrentRect.height()*scale);
-                    belowRect = new Rect(0, 0, beforeBelowRect.width(), beforeBelowRect.height()+height);
+                    int height = Math.round(beforeCurrentRect.height()*scale)+beforeBelowRect.height();
+                    if (layoutManager.getStackOrder() * layoutManager.getNumberOrder() < 0) {
+                        belowRect = new Rect(0, belowView.getHeight()-height, belowView.getWidth(), belowView.getHeight());
+                    }else {
+                        belowRect = new Rect(0, 0, beforeBelowRect.width(), height);
+                    }
                 }
                 ViewCompat.setClipBounds(belowView, belowRect);
             }
