@@ -17,6 +17,7 @@ import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
 
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
@@ -74,15 +75,15 @@ public class StackCardLayoutManager extends RecyclerView.LayoutManager {
 
     private int mNumberOrder;
 
-    private boolean isRemoveLayout;
+    private boolean mIsRemoveLayout;
 
-    private int removeBelowPosition;
+    private int mRemoveBelowPosition;
 
-    private List<RemoveBean> removeList;
+    private List<RemoveBean> mRemoveList;
 
     private RecyclerView mRecyclerView;
 
-//    private int removeBelowPosition;
+//    private int mRemoveBelowPosition;
 
 //    public static final float SMALL_DISTANCE_RATIO = 35f;
 //    public static final float MEDIUM_DISTANCE_RATIO = 12f;
@@ -114,9 +115,9 @@ public class StackCardLayoutManager extends RecyclerView.LayoutManager {
 
     private StackCardSavedState mPendingStackCardSavedState;
 
-    private float baseScale;
+    private float mBaseScale;
 
-    private int centerViewStart;
+    private int mCenterViewStart;
 
     /**
      * implements {@link IPostLayout} to how layout item
@@ -153,7 +154,7 @@ public class StackCardLayoutManager extends RecyclerView.LayoutManager {
     }
 
     public float getBaseScale() {
-        return baseScale;
+        return mBaseScale;
     }
 
     /**
@@ -489,10 +490,10 @@ public class StackCardLayoutManager extends RecyclerView.LayoutManager {
             mDecoratedChildWidth = getDecoratedMeasuredWidth(view);
             mDecoratedChildHeight = getDecoratedMeasuredHeight(view);
 
-            baseScale = 1;
+            mBaseScale = 1;
             if (mViewPostLayout != null) {
-                baseScale = mViewPostLayout.getBaseScale(this, getOrientation());
-                centerViewStart = mViewPostLayout.getCenterViewStartOffset(this, getOrientation());
+                mBaseScale = mViewPostLayout.getBaseScale(this, getOrientation());
+                mCenterViewStart = mViewPostLayout.getCenterViewStartOffset(this, getOrientation());
             }
 
             removeAndRecycleView(view, recycler);
@@ -579,7 +580,7 @@ public class StackCardLayoutManager extends RecyclerView.LayoutManager {
 
         for (int i = 0, count = mLayoutHelper.mLayoutOrder.length; i < count; ++i) {
             final LayoutOrder layoutOrder = mLayoutHelper.mLayoutOrder[i];
-            final int top = centerViewStart ;
+            final int top = mCenterViewStart;
             final int bottom = top + mDecoratedChildHeight;
             fillChildItem(start, top, end, bottom, layoutOrder, recycler, i, childMeasuringNeeded);
         }
@@ -591,7 +592,7 @@ public class StackCardLayoutManager extends RecyclerView.LayoutManager {
 
         for (int i = 0, count = mLayoutHelper.mLayoutOrder.length; i < count; ++i) {
             final LayoutOrder layoutOrder = mLayoutHelper.mLayoutOrder[i];
-            final int start = centerViewStart;
+            final int start = mCenterViewStart;
             final int end = start + mDecoratedChildWidth;
             fillChildItem(start, top, end, bottom, layoutOrder, recycler, i, childMeasuringNeeded);
         }
@@ -621,16 +622,16 @@ public class StackCardLayoutManager extends RecyclerView.LayoutManager {
     @Override
     public void onItemsRemoved(RecyclerView recyclerView, int positionStart, int itemCount) {
         super.onItemsRemoved(recyclerView, positionStart, itemCount);
-        isRemoveLayout = true;
-        if (removeList == null) {
-            removeList = new ArrayList<>();
+        mIsRemoveLayout = true;
+        if (mRemoveList == null) {
+            mRemoveList = new ArrayList<>();
         }
         if (getStackOrder() == IN_STACK_ORDER) {
-            removeBelowPosition = positionStart - 1;
+            mRemoveBelowPosition = positionStart - 1;
         }else {
-            removeBelowPosition = positionStart + 1;
+            mRemoveBelowPosition = positionStart + 1;
         }
-        Log.d(TAG,"onItemsRemoved:"+removeBelowPosition);
+        Log.d(TAG,"onItemsRemoved:"+ mRemoveBelowPosition);
     }
 
     private void fillChildItem(final int start, final int top, final int end, final int bottom, @NonNull final LayoutOrder layoutOrder,
@@ -638,6 +639,10 @@ public class StackCardLayoutManager extends RecyclerView.LayoutManager {
         final View view = bindChild(layoutOrder.mItemAdapterPosition, recycler, childMeasuringNeeded);
         Log.d(TAG,"mItemAdapterPosition:"+layoutOrder.mItemAdapterPosition);
         ViewCompat.setElevation(view, i);
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            view.setElevation(i);
+        }
 
         ItemTransformation transformation = null;
         if (null != mViewPostLayout) {
@@ -647,40 +652,47 @@ public class StackCardLayoutManager extends RecyclerView.LayoutManager {
         if (null == transformation) {
             view.layout(start, top, end, bottom);
         } else {
-            float scaleX = transformation.mScaleX*baseScale;
-            float scaleY = transformation.mScaleY*baseScale;
+            float scaleX = transformation.mScaleX* mBaseScale;
+            float scaleY = transformation.mScaleY* mBaseScale;
             Rect rect;
+            int viewWidth = view.getMeasuredWidth();
+            int viewHeight = view.getMeasuredHeight();
+            if (viewWidth <= 0 || viewHeight <= 0) {
+                viewWidth = getDecoratedChildWidth();
+                viewHeight = getDecoratedChildHeight();
+            }
             if (getOrientation() == VERTICAL) {
                 int height = transformation.mClipLength;
-                if (getStackOrder() * getNumberOrder() < 0) {
-                    rect = new Rect(0,view.getHeight()-height,view.getWidth(),view.getHeight());
+                if (getStackOrder()*getNumberOrder() < 0) {
+                    rect = new Rect(0, viewHeight-height, viewWidth, viewHeight);
                     ViewCompat.setPivotX(view,view.getMeasuredWidth()/2);
                     ViewCompat.setPivotY(view,view.getMeasuredHeight());
                 }else {
-                    rect = new Rect(0,0,view.getWidth(),height);
+                    rect = new Rect(0,0,viewWidth,height);
                     ViewCompat.setPivotX(view, view.getMeasuredWidth()/2);
                     ViewCompat.setPivotY(view, 0);
                 }
-
             }else {
                 int width = transformation.mClipLength;
                 if (getStackOrder() * getNumberOrder() < 0) {
-                    rect = new Rect(view.getWidth()-width,0,view.getWidth(),view.getHeight());
+                    rect = new Rect(viewWidth-width,0,viewWidth,viewHeight);
                     ViewCompat.setPivotX(view,view.getMeasuredWidth());
                     ViewCompat.setPivotY(view,view.getMeasuredHeight()/2);
                 }else {
-                    rect = new Rect(0,0,width,view.getHeight());
+                    rect = new Rect(0,0,width,viewHeight);
                     ViewCompat.setPivotX(view,0);
                     ViewCompat.setPivotY(view,view.getMeasuredHeight()/2);
                 }
             }
             if (transformation.mClipLength < 0) {
-                int width = Math.round(view.getWidth());
-                int height = Math.round(view.getHeight());
-                rect = new Rect(0, 0, width, height);
+                rect = new Rect(0, 0, viewWidth, viewHeight);
             }
             ViewCompat.setScaleX(view, scaleX);
             ViewCompat.setScaleY(view, scaleY);
+
+            final float alpha = transformation.mAlpha;
+            ViewCompat.setAlpha(view, alpha);
+            Log.d(TAG,"getalpha:"+alpha);
 
             if (!mCircleLayout) {
                 /**
@@ -689,17 +701,29 @@ public class StackCardLayoutManager extends RecyclerView.LayoutManager {
                 boolean needClip = ((getStackOrder() == IN_STACK_ORDER && layoutOrder.mItemAdapterPosition == getItemCount()-1) ||
                         (getStackOrder() == OUT_STACK_ORDER && layoutOrder.mItemAdapterPosition == 0));
                 if (needClip) {
-                    rect = new Rect(0, 0, view.getWidth(),view.getHeight());
+                    rect = new Rect(0, 0, viewWidth, viewHeight);
                 }
             }
-            if (isRemoveLayout) {
+            if (mIsRemoveLayout) {
+                int lastPosition = getCenterItemPosition()+getLayoutCount()-(getLayoutCount()/2-1);
+                if (getStackOrder() == OUT_STACK_ORDER && layoutOrder.mItemAdapterPosition == lastPosition) {
+                    view.getViewTreeObserver().addOnPreDrawListener(new ViewTreeObserver.OnPreDrawListener() {
+                        @Override
+                        public boolean onPreDraw() {
+                            ViewCompat.setAlpha(view, alpha);
+                            Log.d(TAG,"Runnable ,getalpha:"+alpha+",width:"+view.getWidth());
+                            view.getViewTreeObserver().removeOnPreDrawListener(this);
+                            return true;
+                        }
+                    });
+                }
                 RemoveBean bean = null;
-                boolean needfixRemove = (getStackOrder() == IN_STACK_ORDER && removeBelowPosition <= layoutOrder.mItemAdapterPosition
+                boolean needfixRemove = (getStackOrder() == IN_STACK_ORDER && mRemoveBelowPosition <= layoutOrder.mItemAdapterPosition
                     && getCenterItemPosition()+1 != mItemsCount-1) || (getStackOrder() == OUT_STACK_ORDER
-                        && removeBelowPosition >= layoutOrder.mItemAdapterPosition);
+                        && mRemoveBelowPosition >= layoutOrder.mItemAdapterPosition);
                 if (needfixRemove) {
                     Rect beforeRect = ViewCompat.getClipBounds(view);
-
+                    Log.d(TAG,"position:"+layoutOrder.mItemAdapterPosition+",beforeRect:"+beforeRect);
                     if (getOrientation() == VERTICAL) {
                         int height;
                         if (getStackOrder() == IN_STACK_ORDER) {
@@ -708,9 +732,9 @@ public class StackCardLayoutManager extends RecyclerView.LayoutManager {
                             height = beforeRect.height()+rect.height();
                         }
                         if (getNumberOrder()*getStackOrder() > 0) {
-                            beforeRect.set(0 ,0 ,view.getWidth(), height);
+                            beforeRect.set(0 ,0 ,viewWidth, height);
                         }else {
-                            beforeRect.set(0, view.getHeight()-height, view.getWidth(),view.getHeight());
+                            beforeRect.set(0, viewHeight-height, viewWidth,viewHeight);
                         }
                     }else {
                         int width;
@@ -721,29 +745,28 @@ public class StackCardLayoutManager extends RecyclerView.LayoutManager {
                         }
 
                         if (getNumberOrder()*getStackOrder() > 0) {
-                            beforeRect.set(0 ,0 ,width, view.getHeight());
+                            beforeRect.set(0 ,0 ,width, viewHeight);
                         }else {
-                            beforeRect.set(view.getWidth()-width, 0, view.getWidth(),view.getHeight());
+                            beforeRect.set(viewWidth-width, 0, viewWidth,viewHeight);
                         }
                     }
 //                    beforeRect.set(0 ,0 ,width,height);
                     bean = new RemoveBean(layoutOrder.mItemAdapterPosition, rect);
                     ViewCompat.setClipBounds(view, beforeRect);
-                }else{
+                }else {
                     ViewCompat.setClipBounds(view, rect);
                 }
                 if (bean != null) {
-                    removeList.add(bean);
+                    mRemoveList.add(bean);
                 }
             }else {
                 ViewCompat.setClipBounds(view, rect);
+                Log.d(TAG,"rect:"+rect);
             }
 
             int translationX = transformation.mTranslationX*getStackOrder()*getNumberOrder();
             int translationY = transformation.mTranslationY*getStackOrder()*getNumberOrder();
             view.layout((start + translationX), (top + translationY), (end + translationX), (bottom + translationY));
-
-            ViewCompat.setAlpha(view, transformation.mAlpha);//todo remove not alpha
 
         }
     }
@@ -758,22 +781,22 @@ public class StackCardLayoutManager extends RecyclerView.LayoutManager {
     public void onLayoutCompleted(RecyclerView.State state) {
         super.onLayoutCompleted(state);
 
-        if (isRemoveLayout) {
-            isRemoveLayout = false;
+        if (mIsRemoveLayout) {
+            mIsRemoveLayout = false;
             long delay = mRecyclerView.getItemAnimator().getRemoveDuration()+200;
             Log.d(TAG,"onLayoutCompleted,delay:"+delay);
-            /*mRecyclerView.postDelayed(new Runnable() {
+            mRecyclerView.postDelayed(new Runnable() {
                 @Override
                 public void run() {
-                    if (removeList != null && removeList.size() > 0) {
-                        for (RemoveBean bean : removeList) {
+                    if (mRemoveList != null && mRemoveList.size() > 0) {
+                        for (RemoveBean bean : mRemoveList) {
                             View view = findViewByPosition(bean.position);
                             ViewCompat.setClipBounds(view, bean.clipRect);
                         }
-                        removeList.clear();
+                        mRemoveList.clear();
                     }
                 }
-            }, delay);*/
+            }, delay);
         }
         Log.d(TAG,"onLayoutCompleted");
     }
@@ -893,12 +916,15 @@ public class StackCardLayoutManager extends RecyclerView.LayoutManager {
     }
 
     private View bindChild(final int position, @NonNull final RecyclerView.Recycler recycler, final boolean childMeasuringNeeded) {
+        Log.d(TAG,"bindChild");
         final View view = findViewForPosition(recycler, position);
 
         if (null == view.getParent()) {
+            Log.d(TAG,"bindChild add ");
             addView(view);
             measureChildWithMargins(view, 0, 0);
         } else {
+            Log.d(TAG,"bindChild attach "+childMeasuringNeeded);
             detachView(view);
             attachView(view);
             if (childMeasuringNeeded) {
@@ -906,7 +932,7 @@ public class StackCardLayoutManager extends RecyclerView.LayoutManager {
             }
         }
 
-        Log.d(TAG,"bindChild");
+
 
         return view;
     }

@@ -16,8 +16,6 @@ public class StackCardPostLayout implements StackCardLayoutManager.IPostLayout {
     private int mediumDistance;
     private int bigDistance;
 
-    private int moreOffset;
-
     public int getCenterViewOffset(@NonNull StackCardLayoutManager layoutManager, int length) {
         int mediumCount = isLessType ? 1 : 2;
 
@@ -85,7 +83,6 @@ public class StackCardPostLayout implements StackCardLayoutManager.IPostLayout {
         }else {
             length = layoutManager.getWidthNoPadding();
         }
-        moreOffset = Math.round(1f/(BASE)*layoutManager.getScrollItemSize());
         return getCenterViewOffset(layoutManager, length);
     }
 
@@ -158,16 +155,14 @@ public class StackCardPostLayout implements StackCardLayoutManager.IPostLayout {
             translateY = 0;
         }
         float alpha = 1;
-        if(itemPositionToCenterDiff > -6 && itemPositionToCenterDiff < -2) {
-            alpha = itemPositionToCenterDiff/4f+3f/2;
-        }else if(itemPositionToCenterDiff <= -6) {
+        int transparentPosition = isLessType ? -5 : -6;
+        if(itemPositionToCenterDiff > transparentPosition && itemPositionToCenterDiff < -changePosition) {
+            alpha = itemPositionToCenterDiff/4f-transparentPosition/4f;
+        }else if(itemPositionToCenterDiff <= transparentPosition) {
             alpha = 0;
         }
 
         clipLength = Math.round(clipLength/scale);// + moreOffset;
-        /*if (itemPositionToCenterDiff >= 0) {
-            clipLength += moreOffset;
-        }*/
         if (isLessType && itemPositionToCenterDiff >= 1) {
             clipLength = -1;
         }
