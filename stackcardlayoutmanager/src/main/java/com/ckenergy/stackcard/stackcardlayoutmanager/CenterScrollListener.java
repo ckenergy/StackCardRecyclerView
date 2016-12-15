@@ -39,7 +39,7 @@ public class CenterScrollListener extends RecyclerView.OnScrollListener {
                 }else if (totalOffset < 0) {
                     distance = -totalOffset;
                 }else {
-                    if (Math.abs(scrollNeeded) > itemSize/10) {// 移动itemsize的1/20就弹到下一个
+                    if (Math.abs(scrollNeeded) > itemSize/10) {// move itemsize 1/20 than move to next
                         if (lm.getNumberOrder()*arrow*scrollNeeded < 0) {
                             distance = (int) (scrollNeeded-Math.signum(scrollNeeded)*itemSize);
                         }

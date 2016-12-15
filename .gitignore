@@ -44,3 +44,5 @@ out/
 
 # Keystore files
 *.jks
+
+stackcardlayoutmanager/upload

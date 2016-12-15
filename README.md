@@ -35,6 +35,27 @@ thanks for [CarouselLayoutManager](https://github.com/Azoft/CarouselLayoutManage
 <img src="./img/h_in_n.jpg" width = "180" height = "300" />
 <img src="./img/h_out_n.jpg" width = "180" height = "300"  />
 
+### dependencies ###
+##### Maven Central #####
+```xml
+<dependency>
+  <groupId>com.ckenergy.stackcardlayoutmanager</groupId>
+  <artifactId>stackcardlayoutmanager</artifactId>
+  <version>1.0.1</version>
+  <type>pom</type>
+</dependency>
+```
+##### Gradle #####
+```
+compile 'com.ckenergy.stackcardlayoutmanager:stackcardlayoutmanager:1.0.1'
+```
+##### Ivy #####
+```xml
+<dependency org='com.ckenergy.stackcardlayoutmanager' name='stackcardlayoutmanager' rev='1.0.1'>
+  <artifact name='stackcardlayoutmanager' ext='pom' ></artifact>
+</dependency>
+```
+
 ### There also have two number count type(less and more) for Vertical and Horizontal ###
 
 It will be less count when width is bigger than height in Vertical layout and height is bigger than width is Horizontal layout.
@@ -83,7 +104,7 @@ you can change this order
 ```
 
 ### Support (支持) ###
-- Please do not send e-mail to me. Public technical discussion on github is preferred.
+- Please Public technical discussion on github is preferred.
 - 请尽量在 github 上公开讨论[技术问题](https://github.com/ckenergy/StackCardRecyclerView/issues)。
 
 ### TODO ###
