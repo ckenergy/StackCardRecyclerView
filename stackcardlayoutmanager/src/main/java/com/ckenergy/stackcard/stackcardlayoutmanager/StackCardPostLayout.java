@@ -1,7 +1,7 @@
 package com.ckenergy.stackcard.stackcardlayoutmanager;
 
+import android.os.Build;
 import android.support.annotation.NonNull;
-import android.util.Log;
 
 /**
  * Implementation of {@link StackCardLayoutManager.IPostLayout} that makes interesting scaling of items. <br />
@@ -45,7 +45,7 @@ public class StackCardPostLayout implements StackCardLayoutManager.IPostLayout {
      */
     @Override
     public float getBaseScale(@NonNull StackCardLayoutManager layoutManager, int orientation) {
-        Log.d(getClass().getSimpleName(),"getBaseScale");
+//        Log.d(getClass().getSimpleName(),"getBaseScale");
         int parentHeight = layoutManager.getHeightNoPadding();
         int parentWidth = layoutManager.getWidthNoPadding();
         float baseScale = 1;
@@ -76,7 +76,7 @@ public class StackCardPostLayout implements StackCardLayoutManager.IPostLayout {
 
     @Override
     public int getCenterViewStartOffset(@NonNull StackCardLayoutManager layoutManager, int orientation) {
-        Log.d(getClass().getSimpleName(),"getCenterViewStartOffset");
+//        Log.d(getClass().getSimpleName(),"getCenterViewStartOffset");
         int length ;
         if (orientation == StackCardLayoutManager.VERTICAL) {
             length = layoutManager.getHeightNoPadding();
@@ -88,7 +88,7 @@ public class StackCardPostLayout implements StackCardLayoutManager.IPostLayout {
 
     @Override
     public ItemTransformation transformChild(@NonNull final StackCardLayoutManager layoutManager, final float itemPositionToCenterDiff, final int orientation) {
-        Log.d(getClass().getSimpleName(),"transformChild");
+//        Log.d(getClass().getSimpleName(),"transformChild");
         int base = BASE;
         float itemDiff = Math.abs(itemPositionToCenterDiff-2.5f);
         final float scale = Math.min((base-itemDiff)/base, 1);
@@ -99,11 +99,29 @@ public class StackCardPostLayout implements StackCardLayoutManager.IPostLayout {
         int width;
         width = layoutManager.getWidthNoPadding();
         height = layoutManager.getHeightNoPadding();
-//        Log.d("transformChild","height:"+height);
         int changePosition = isLessType ? 1 : 2;
         float ratio;
-        int clipLength;
 
+        /**
+         * below the {@link Build.VERSION_CODES.LOLLIPOP} view.setClipBounds(rect) is not work
+         * so we needn't Calculation the rect
+         */
+        int clipLength;
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            if(itemPositionToCenterDiff <= -changePosition-1) {
+                clipLength = smallDistance;
+            }else if(itemPositionToCenterDiff <= -1 && itemPositionToCenterDiff > -changePosition-1) {
+                clipLength = mediumDistance;
+            }else {
+                clipLength = bigDistance;
+            }
+            clipLength = Math.round(clipLength/scale);
+            if (isLessType && itemPositionToCenterDiff >= 1) {
+                clipLength = -1;
+            }
+        }else {
+            clipLength = -1;
+        }
         /**
          * use the x instead of itemPositionToCenterDiff ,y instead of ratio
          * isLessType == false  changePosition = 2 the x range(-6,2)
@@ -121,24 +139,6 @@ public class StackCardPostLayout implements StackCardLayoutManager.IPostLayout {
          *  there is different at moreType the MediumDistanceRatio only one item
          *
          */
-        /*if(itemPositionToCenterDiff > 0) {
-            clipLength = bigDistance;
-        }else if (itemPositionToCenterDiff > -1&& itemPositionToCenterDiff < 0) {
-            clipLength = (int) ((itemPositionToCenterDiff+1)*height);
-        }else if (itemPositionToCenterDiff < -1 && itemPositionToCenterDiff > -2) {
-            clipLength = mediumDistance;
-        }else if (itemPositionToCenterDiff < -2 && itemPositionToCenterDiff >-3){
-            clipLength = (int) ((itemPositionToCenterDiff+3)*height);
-        }else if (itemPositionToCenterDiff < -3) {
-            clipLength = smallDistance;
-        }*/
-        if(itemPositionToCenterDiff <= -changePosition-1) {
-            clipLength = smallDistance;
-        }else if(itemPositionToCenterDiff <= -1 && itemPositionToCenterDiff > -changePosition-1) {
-            clipLength = mediumDistance;
-        }else {
-            clipLength = bigDistance;
-        }
         if (itemPositionToCenterDiff <= -changePosition) {
             ratio = ((itemPositionToCenterDiff+changePosition) / getSmallDistanceRatio()
                     -changePosition/getMediumDistanceRatio());
@@ -162,11 +162,7 @@ public class StackCardPostLayout implements StackCardLayoutManager.IPostLayout {
             alpha = 0;
         }
 
-        clipLength = Math.round(clipLength/scale);// + moreOffset;
-        if (isLessType && itemPositionToCenterDiff >= 1) {
-            clipLength = -1;
-        }
-        Log.d("StackCardPostLayout", "itemPositionToCenterDiff:"+itemPositionToCenterDiff+",alpha:"+alpha);
+//        Log.d("StackCardPostLayout", "itemPositionToCenterDiff:"+itemPositionToCenterDiff+",alpha:"+alpha);
         return new ItemTransformation(scale, scale, translateX, translateY, clipLength, alpha);
     }
 

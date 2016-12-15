@@ -84,11 +84,11 @@ you can change this order
 
 ### Support (支持) ###
 - Please do not send e-mail to me. Public technical discussion on github is preferred.
-- 请尽量在 github 上公开讨论[技术问题](https://github.com/ckenergy/StackCardRecyclerView/issues)，不要以邮件方式私下询问。
+- 请尽量在 github 上公开讨论[技术问题](https://github.com/ckenergy/StackCardRecyclerView/issues)。
 
 ### TODO ###
 
-* 1.overDraw need fix
+* 1.below LOLLIPOP overDraw need fix (i use view.setClipBounds(rect) but in below SDK LOLLIPOP is not work )
 * 2.need more faster (although it have fast scroll,when i scroll more faster the view aren't so fast)
 * 3.my english : )
 

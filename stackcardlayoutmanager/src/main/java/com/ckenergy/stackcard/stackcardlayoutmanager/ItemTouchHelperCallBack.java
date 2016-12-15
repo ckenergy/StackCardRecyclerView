@@ -1,6 +1,7 @@
 package com.ckenergy.stackcard.stackcardlayoutmanager;
 
 import android.graphics.Rect;
+import android.os.Build;
 import android.support.v4.view.ViewCompat;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
@@ -22,14 +23,8 @@ public class ItemTouchHelperCallBack extends ItemTouchHelper.Callback {
     private View belowView;
 
     @Override
-    public void onMoved(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, int fromPos, RecyclerView.ViewHolder target, int toPos, int x, int y) {
-        super.onMoved(recyclerView, viewHolder, fromPos, target, toPos, x, y);
-        Log.d(getClass().getSimpleName(),"onMoved");
-    }
-
-    @Override
     public int getMovementFlags(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder) {
-        Log.d(getClass().getSimpleName(),"getMovementFlags");
+//        Log.d(getClass().getSimpleName(),"getMovementFlags");
         if (!(recyclerView.getLayoutManager() instanceof StackCardLayoutManager)) {
             return makeMovementFlags(0, 0);
         }
@@ -43,46 +38,50 @@ public class ItemTouchHelperCallBack extends ItemTouchHelper.Callback {
             swipeFlags = ItemTouchHelper.START | ItemTouchHelper.END;
         }
 
-        if (!isStartSwip) {
-            beforeCurrentRect = ViewCompat.getClipBounds(viewHolder.itemView);
-            isStartSwip = true;
-            int current = viewHolder.getAdapterPosition();
-            Log.d(getClass().getSimpleName(),"current:"+current);
-            Rect rect = new Rect(0, 0, viewHolder.itemView.getWidth(), viewHolder.itemView.getHeight());
-            ViewCompat.setClipBounds(viewHolder.itemView, rect);
-            int belowPosition;
-            if (layoutManager.getStackOrder() == StackCardLayoutManager.IN_STACK_ORDER) {
-                belowPosition = current - 1;
-            }else {
-                belowPosition = current + 1;
-            }
-            belowView = layoutManager.findViewByPosition(belowPosition);
-//            recyclerView.getAdapter().
-            Log.d(getClass().getSimpleName(),"belowView:"+belowView);
-            if(belowView != null) {
-                beforeBelowRect = ViewCompat.getClipBounds(belowView);
-                Rect belowRect;
-                if (layoutManager.getOrientation() == StackCardLayoutManager.HORIZONTAL) {
-                    float scale = viewHolder.itemView.getScaleY() / belowView.getScaleY();
-                    int width = Math.round(beforeCurrentRect.width()*scale)+beforeBelowRect.width();
-                    if (layoutManager.getStackOrder() * layoutManager.getNumberOrder() < 0) {
-                        belowRect = new Rect(belowView.getWidth()-width, 0, belowView.getWidth(), beforeBelowRect.height());
-                    }else {
-                        belowRect = new Rect(0, 0, width, beforeBelowRect.height());
-                    }
+        /**
+         * below the {@link Build.VERSION_CODES.LOLLIPOP} view.setClipBounds(rect) is not work
+         * so we needn't Calculation the rect
+         */
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            if (!isStartSwip) {
+                beforeCurrentRect = ViewCompat.getClipBounds(viewHolder.itemView);
+                isStartSwip = true;
+                int current = viewHolder.getAdapterPosition();
+//                Log.d(getClass().getSimpleName(),"current:"+current);
+                Rect rect = new Rect(0, 0, viewHolder.itemView.getWidth(), viewHolder.itemView.getHeight());
+                ViewCompat.setClipBounds(viewHolder.itemView, rect);
+                int belowPosition;
+                if (layoutManager.getStackOrder() == StackCardLayoutManager.IN_STACK_ORDER) {
+                    belowPosition = current - 1;
                 }else {
-                    float scale = viewHolder.itemView.getScaleX()/belowView.getScaleX();
-                    int height = Math.round(beforeCurrentRect.height()*scale)+beforeBelowRect.height();
-                    if (layoutManager.getStackOrder() * layoutManager.getNumberOrder() < 0) {
-                        belowRect = new Rect(0, belowView.getHeight()-height, belowView.getWidth(), belowView.getHeight());
-                    }else {
-                        belowRect = new Rect(0, 0, beforeBelowRect.width(), height);
-                    }
+                    belowPosition = current + 1;
                 }
-                ViewCompat.setClipBounds(belowView, belowRect);
+                belowView = layoutManager.findViewByPosition(belowPosition);
+                if(belowView != null) {
+                    beforeBelowRect = ViewCompat.getClipBounds(belowView);
+                    Rect belowRect;
+                    if (layoutManager.getOrientation() == StackCardLayoutManager.HORIZONTAL) {
+                        float scale = viewHolder.itemView.getScaleY() / belowView.getScaleY();
+                        int width = Math.round(beforeCurrentRect.width()*scale)+beforeBelowRect.width();
+                        if (layoutManager.getStackOrder() * layoutManager.getNumberOrder() < 0) {
+                            belowRect = new Rect(belowView.getWidth()-width, 0, belowView.getWidth(), beforeBelowRect.height());
+                        }else {
+                            belowRect = new Rect(0, 0, width, beforeBelowRect.height());
+                        }
+                    }else {
+                        float scale = viewHolder.itemView.getScaleX()/belowView.getScaleX();
+                        int height = Math.round(beforeCurrentRect.height()*scale)+beforeBelowRect.height();
+                        if (layoutManager.getStackOrder() * layoutManager.getNumberOrder() < 0) {
+                            belowRect = new Rect(0, belowView.getHeight()-height, belowView.getWidth(), belowView.getHeight());
+                        }else {
+                            belowRect = new Rect(0, 0, beforeBelowRect.width(), height);
+                        }
+                    }
+                    ViewCompat.setClipBounds(belowView, belowRect);
+                }
             }
-
         }
+
         return makeMovementFlags(dragFlags, swipeFlags);
     }
 
@@ -92,7 +91,7 @@ public class ItemTouchHelperCallBack extends ItemTouchHelper.Callback {
         Log.d(getClass().getSimpleName(),"clearView:"+viewHolder.getAdapterPosition());
         if (isStartSwip) {
             isStartSwip = false;
-            if (viewHolder.getAdapterPosition() > 0 ) {
+            if (viewHolder.getAdapterPosition() >= 0 ) {
                 if (belowView != null) {
                     ViewCompat.setClipBounds(belowView, beforeBelowRect);
                 }
@@ -104,7 +103,7 @@ public class ItemTouchHelperCallBack extends ItemTouchHelper.Callback {
     @Override
     public boolean onMove(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, RecyclerView.ViewHolder target) {
         Log.d(getClass().getSimpleName(),"onMove");
-        return true;
+        return false;
     }
 
     public onSwipListener getOnSwipListener() {
@@ -117,7 +116,7 @@ public class ItemTouchHelperCallBack extends ItemTouchHelper.Callback {
 
     @Override
     public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction) {
-        Log.d(getClass().getSimpleName(),"onSwiped,direction:"+direction);
+//        Log.d(getClass().getSimpleName(),"onSwiped,direction:"+direction);
         int position = viewHolder.getAdapterPosition();
         if (mOnSwipListener != null) {
             mOnSwipListener.onSwip(viewHolder,position);
