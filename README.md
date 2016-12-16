@@ -12,7 +12,7 @@ this is RecyclerView like S7 Recent task
 <img src="./img/gif_h_f.gif" width = "180" height = "300" />
 <img src="./img/gif_h_l.gif" width = "180" height = "300"  />
 
-thanks for [CarouselLayoutManager](https://github.com/Azoft/CarouselLayoutManager) , I use his framework,but change a lot of layout , add can't scroll effect;
+thanks for [CarouselLayoutManager](https://github.com/Azoft/CarouselLayoutManager) , I use his framework.
 
 ### There have two type Vertical and Horizontal ###
 <br/> 
@@ -115,7 +115,7 @@ you can change this order
 
 #### License ####
 
-	Copyright 2016 ckenergy <ckenergy@qq.com>
+	Copyright 2016 ckenergy <2ckenergy@gmail.com>
     Licensed under the Apache License, Version 2.0 (the "License");
     you may not use this file except in compliance with the License.
     You may obtain a copy of the License at
