@@ -14,6 +14,27 @@ this is RecyclerView like S7 Recent task
 
 thanks for [CarouselLayoutManager](https://github.com/Azoft/CarouselLayoutManager) , I use his framework.
 
+### dependencies ###
+##### Maven Central #####
+```xml
+<dependency>
+  <groupId>com.ckenergy.stackcardlayoutmanager</groupId>
+  <artifactId>stackcardlayoutmanager</artifactId>
+  <version>1.0.1</version>
+  <type>pom</type>
+</dependency>
+```
+##### Gradle #####
+```
+compile 'com.ckenergy.stackcardlayoutmanager:stackcardlayoutmanager:1.0.1'
+```
+##### Ivy #####
+```xml
+<dependency org='com.ckenergy.stackcardlayoutmanager' name='stackcardlayoutmanager' rev='1.0.1'>
+  <artifact name='stackcardlayoutmanager' ext='pom' ></artifact>
+</dependency>
+```
+
 ### There have two type Vertical and Horizontal ###
 <br/> 
 <img src="./img/v_c_exp.jpg" width = "180" height = "300" />
@@ -35,26 +56,6 @@ thanks for [CarouselLayoutManager](https://github.com/Azoft/CarouselLayoutManage
 <img src="./img/h_in_n.jpg" width = "180" height = "300" />
 <img src="./img/h_out_n.jpg" width = "180" height = "300"  />
 
-### dependencies ###
-##### Maven Central #####
-```xml
-<dependency>
-  <groupId>com.ckenergy.stackcardlayoutmanager</groupId>
-  <artifactId>stackcardlayoutmanager</artifactId>
-  <version>1.0.1</version>
-  <type>pom</type>
-</dependency>
-```
-##### Gradle #####
-```
-compile 'com.ckenergy.stackcardlayoutmanager:stackcardlayoutmanager:1.0.1'
-```
-##### Ivy #####
-```xml
-<dependency org='com.ckenergy.stackcardlayoutmanager' name='stackcardlayoutmanager' rev='1.0.1'>
-  <artifact name='stackcardlayoutmanager' ext='pom' ></artifact>
-</dependency>
-```
 
 ### There also have two number count type(less and more) for Vertical and Horizontal ###
 
