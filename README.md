@@ -104,10 +104,6 @@ you can change this order
         }, recyclerView, layoutManager);                
 ```
 
-### Support (支持) ###
-- Please Public technical discussion on github is preferred.
-- 请尽量在 github 上公开讨论[技术问题](https://github.com/ckenergy/StackCardRecyclerView/issues)。
-
 ### TODO ###
 
 * 1.below LOLLIPOP overDraw need fix (i use view.setClipBounds(rect) but in below SDK LOLLIPOP is not work )
