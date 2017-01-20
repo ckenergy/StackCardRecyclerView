@@ -1,8 +1,5 @@
 # StackCardRecyclerView
-[中文版REANDME](./README-CN.md)
-<br/>
-<br/>
-this is RecyclerView like 6.0 Recent task
+类似于Android 6.0最近任务
 <br/>
 <br/>
 <img src="./img/exp.jpg" width = "180" height = "300"  />
@@ -15,7 +12,7 @@ this is RecyclerView like 6.0 Recent task
 <img src="./img/gif_h_f.gif" width = "180" height = "300" />
 <img src="./img/gif_h_l.gif" width = "180" height = "300"  />
 
-thanks for [CarouselLayoutManager](https://github.com/Azoft/CarouselLayoutManager) , I use his framework.
+感谢 [CarouselLayoutManager](https://github.com/Azoft/CarouselLayoutManager) , 我参考了他的代码.
 
 ### dependencies ###
 ##### Maven Central #####
@@ -38,31 +35,31 @@ compile 'com.ckenergy.stackcardlayoutmanager:stackcardlayoutmanager:1.0.1'
 </dependency>
 ```
 
-### There have two type Vertical and Horizontal ###
+### 有竖直（Vertical）和水平（Horizontal） 两种类型###
 <br/> 
 <img src="./img/v_c_exp.jpg" width = "180" height = "300" />
 <img src="./img/h_out_n.jpg" width = "180" height = "300"  /> 
 
-### Any Type have two stack order(in stack and out stack) and two number order(positive and negative) ###
+### 不管横向还是竖向都有卡片入栈和出栈堆叠模式(in stack and out stack) 和正反序排序模式(positive and negative) ###
 
-#### Example Horizontal not circle ####
+#### 水平 ####
 
- * 1.in stack order, positive 
- * 2.out stack order, positive
+ * 1.正序, 入栈 
+ * 2.正序, 出栈
 <br/>
 <img src="./img/h_in_p.jpg" width = "180" height = "300" />
 <img src="./img/h_out_p.jpg" width = "180" height = "300"  />
 
- * 3.in stack order, negative 
- * 4.out stack order, negative
+ * 3.反序, 入栈
+ * 4.反序, 出栈
 <br/>
 <img src="./img/h_in_n.jpg" width = "180" height = "300" />
 <img src="./img/h_out_n.jpg" width = "180" height = "300"  />
 
 
-### There also have two number count type(less and more) for Vertical and Horizontal ###
+### 高度或宽度不够的话会影响显示数量 ###
 
-It will be less count when width is bigger than height in Vertical layout and height is bigger than width is Horizontal layout.
+在竖直模式当宽度大于高度时，在水平模式当高度大于宽度时，都显示less模式
 
  * 1.less have 7 item
  * 2.more have 9 item
@@ -72,8 +69,8 @@ It will be less count when width is bigger than height in Vertical layout and he
 
 ### How to use? ###
 
-- new StackCardLayoutManager default is in stack and positive,
-you can change this order 
+- 默认创建的 new StackCardLayoutManager 正序和入栈模式,
+你可以这样改变它们
 
 ``` java
           StackCardLayoutManager stackCardLayoutManager = new StackCardLayoutManager(StackCardLayoutManager.VERTICAL,true, new StackCardPostLayout());
@@ -81,7 +78,7 @@ you can change this order
         stackCardLayoutManager.setNumberOrder(StackCardLayoutManager.NEGATIVE_ORDER);  recyclerView.setLayoutManager(stackCardLayoutManager);                
 ```
 
-- add swip and swip listener 
+- 添加滑动事件swip listener 
 <br/>
 <img src="./img/gif_swip.gif" width = "180" height = "300"  />
 ``` java
@@ -91,7 +88,7 @@ you can change this order
           itemTouchHelper.attachToRecyclerView(recyclerView);                
 ```
 
-- add scroll to position and center listener 
+- 添加自动对齐和点击移动事件
 <br/>
 <img src="./img/h_scroll2p.gif" width = "180" height = "300"  />
 ``` java
@@ -109,9 +106,8 @@ you can change this order
 
 ### TODO ###
 
-* 1.below LOLLIPOP overDraw need fix (i use view.setClipBounds(rect) but in below SDK LOLLIPOP is not work )
-* 2.need more faster (although it have fast scroll,when i scroll more faster the view aren't so fast)
-* 3.my english : )
+* 1.在5.0以下的过度绘制(我使用的 view.setClipBounds(rect) 这个方法来避免过度绘制，但是在5.0以下没有效果 )
+* 2.需要在滑动起来时速度更快
 
 #### License ####
 
