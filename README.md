@@ -86,25 +86,29 @@ you can change this order
 <br/>
 <img src="./img/gif_swip.gif" width = "180" height = "300"  />
 
-``` java ItemTouchHelperCallBack itemTouchHelperCallBack = new ItemTouchHelperCallBack();
-          itemTouchHelperCallBack.setOnSwipListener(swipListener);
-          ItemTouchHelper itemTouchHelper = new ItemTouchHelper(itemTouchHelperCallBack);
-          itemTouchHelper.attachToRecyclerView(recyclerView);  ```
+``` java 
+ItemTouchHelperCallBack itemTouchHelperCallBack = new ItemTouchHelperCallBack();
+itemTouchHelperCallBack.setOnSwipListener(swipListener);
+ItemTouchHelper itemTouchHelper = new ItemTouchHelper(itemTouchHelperCallBack);
+itemTouchHelper.attachToRecyclerView(recyclerView);
+```
 
 - add scroll to position and center listener 
 <br/>
 <img src="./img/h_scroll2p.gif" width = "180" height = "300"  />
 
-``` java // enable center post touching on item and item click listener
-        DefaultChildSelectionListener.initCenterItemListener(new DefaultChildSelectionListener.OnCenterItemClickListener() {
-            @Override
-            public void onCenterItemClicked(@NonNull final RecyclerView recyclerView, @NonNull final StackCardLayoutManager stackCardLayoutManager, @NonNull final View v) {
-                final int position = recyclerView.getChildLayoutPosition(v);
-                final String msg = String.format(Locale.US, "Item %1$d was clicked", position);
-                Log.d("onCenterItemClicked", msg);
-                Toast.makeText(BaseActivity.this, msg, Toast.LENGTH_SHORT).show();
-            }
-        }, recyclerView, layoutManager);   ```
+``` java
+// enable center post touching on item and item click listener
+DefaultChildSelectionListener.initCenterItemListener(new DefaultChildSelectionListener.OnCenterItemClickListener() {
+   @Override
+   public void onCenterItemClicked(@NonNull final RecyclerView recyclerView, @NonNull final StackCardLayoutManager stackCardLayoutManager, @NonNull final View v) {
+     final int position = recyclerView.getChildLayoutPosition(v);
+     final String msg = String.format(Locale.US, "Item %1$d was clicked", position);
+     Log.d("onCenterItemClicked", msg);
+     Toast.makeText(BaseActivity.this, msg, Toast.LENGTH_SHORT).show();
+   }
+}, recyclerView, layoutManager);
+```
 
 ### TODO ###
 
