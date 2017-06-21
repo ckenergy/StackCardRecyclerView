@@ -85,19 +85,17 @@ you can change this order
 - add swip and swip listener 
 <br/>
 <img src="./img/gif_swip.gif" width = "180" height = "300"  />
-``` java
-          ItemTouchHelperCallBack itemTouchHelperCallBack = new ItemTouchHelperCallBack();
+
+``` java ItemTouchHelperCallBack itemTouchHelperCallBack = new ItemTouchHelperCallBack();
           itemTouchHelperCallBack.setOnSwipListener(swipListener);
           ItemTouchHelper itemTouchHelper = new ItemTouchHelper(itemTouchHelperCallBack);
-          itemTouchHelper.attachToRecyclerView(recyclerView);                
-
-```
+          itemTouchHelper.attachToRecyclerView(recyclerView);  ```
 
 - add scroll to position and center listener 
 <br/>
 <img src="./img/h_scroll2p.gif" width = "180" height = "300"  />
-``` java
-          // enable center post touching on item and item click listener
+
+``` java // enable center post touching on item and item click listener
         DefaultChildSelectionListener.initCenterItemListener(new DefaultChildSelectionListener.OnCenterItemClickListener() {
             @Override
             public void onCenterItemClicked(@NonNull final RecyclerView recyclerView, @NonNull final StackCardLayoutManager stackCardLayoutManager, @NonNull final View v) {
@@ -106,9 +104,7 @@ you can change this order
                 Log.d("onCenterItemClicked", msg);
                 Toast.makeText(BaseActivity.this, msg, Toast.LENGTH_SHORT).show();
             }
-        }, recyclerView, layoutManager);                
-
-```
+        }, recyclerView, layoutManager);   ```
 
 ### TODO ###
 
