@@ -73,35 +73,37 @@ compile 'com.ckenergy.stackcardlayoutmanager:stackcardlayoutmanager:1.0.1'
 你可以这样改变它们
 
 ``` java
-          StackCardLayoutManager stackCardLayoutManager = new StackCardLayoutManager(StackCardLayoutManager.VERTICAL,true, new StackCardPostLayout());
-        stackCardLayoutManager.setStackOrder(StackCardLayoutManager.OUT_STACK_ORDER);
-        stackCardLayoutManager.setNumberOrder(StackCardLayoutManager.NEGATIVE_ORDER);  recyclerView.setLayoutManager(stackCardLayoutManager);                
+StackCardLayoutManager stackCardLayoutManager = new StackCardLayoutManager(StackCardLayoutManager.VERTICAL,true, new StackCardPostLayout());
+stackCardLayoutManager.setStackOrder(StackCardLayoutManager.OUT_STACK_ORDER);
+stackCardLayoutManager.setNumberOrder(StackCardLayoutManager.NEGATIVE_ORDER);  
+recyclerView.setLayoutManager(stackCardLayoutManager);
 ```
 
 - 添加滑动事件swip listener 
 <br/>
 <img src="./img/gif_swip.gif" width = "180" height = "300"  />
 ``` java
-          ItemTouchHelperCallBack itemTouchHelperCallBack = new ItemTouchHelperCallBack();
-          itemTouchHelperCallBack.setOnSwipListener(swipListener);
-          ItemTouchHelper itemTouchHelper = new ItemTouchHelper(itemTouchHelperCallBack);
-          itemTouchHelper.attachToRecyclerView(recyclerView);                
+ItemTouchHelperCallBack itemTouchHelperCallBack = new ItemTouchHelperCallBack();
+itemTouchHelperCallBack.setOnSwipListener(swipListener);
+ItemTouchHelper itemTouchHelper = new ItemTouchHelper(itemTouchHelperCallBack);
+itemTouchHelper.attachToRecyclerView(recyclerView);
 ```
 
 - 添加自动对齐和点击移动事件
 <br/>
 <img src="./img/h_scroll2p.gif" width = "180" height = "300"  />
+
 ``` java
-          // enable center post touching on item and item click listener
-        DefaultChildSelectionListener.initCenterItemListener(new DefaultChildSelectionListener.OnCenterItemClickListener() {
-            @Override
-            public void onCenterItemClicked(@NonNull final RecyclerView recyclerView, @NonNull final StackCardLayoutManager stackCardLayoutManager, @NonNull final View v) {
-                final int position = recyclerView.getChildLayoutPosition(v);
-                final String msg = String.format(Locale.US, "Item %1$d was clicked", position);
-                Log.d("onCenterItemClicked", msg);
-                Toast.makeText(BaseActivity.this, msg, Toast.LENGTH_SHORT).show();
-            }
-        }, recyclerView, layoutManager);                
+// enable center post touching on item and item click listener
+DefaultChildSelectionListener.initCenterItemListener(new DefaultChildSelectionListener.OnCenterItemClickListener() {
+   @Override
+   public void onCenterItemClicked(@NonNull final RecyclerView recyclerView, @NonNull final StackCardLayoutManager stackCardLayoutManager, @NonNull final View v) {
+     final int position = recyclerView.getChildLayoutPosition(v);
+     final String msg = String.format(Locale.US, "Item %1$d was clicked", position);
+     Log.d("onCenterItemClicked", msg);
+     Toast.makeText(BaseActivity.this, msg, Toast.LENGTH_SHORT).show();
+   }
+}, recyclerView, layoutManager);
 ```
 
 ### TODO ###
