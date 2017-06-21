@@ -6,11 +6,9 @@
 
 ## View GIF ##
 
-<img src="./img/gif_v.gif" width = "180" height = "300" />
-<img src="./img/gif_h_in_n.gif" width = "180" height = "300"  /> 
+<img src="./img/gif_v.gif" width = "180" height = "300" /> <img src="./img/gif_h_in_n.gif" width = "180" height = "300"  /> 
 <Br/>
-<img src="./img/gif_h_f.gif" width = "180" height = "300" />
-<img src="./img/gif_h_l.gif" width = "180" height = "300"  />
+<img src="./img/gif_h_f.gif" width = "180" height = "300" /> <img src="./img/gif_h_l.gif" width = "180" height = "300"  />
 
 感谢 [CarouselLayoutManager](https://github.com/Azoft/CarouselLayoutManager) , 我参考了他的代码.
 
@@ -47,14 +45,12 @@ compile 'com.ckenergy.stackcardlayoutmanager:stackcardlayoutmanager:1.0.1'
  * 1.正序, 入栈 
  * 2.正序, 出栈
 <br/>
-<img src="./img/h_in_p.jpg" width = "180" height = "300" />
-<img src="./img/h_out_p.jpg" width = "180" height = "300"  />
+<img src="./img/h_in_p.jpg" width = "180" height = "300" />  <img src="./img/h_out_p.jpg" width = "180" height = "300"  />
 
  * 3.反序, 入栈
  * 4.反序, 出栈
 <br/>
-<img src="./img/h_in_n.jpg" width = "180" height = "300" />
-<img src="./img/h_out_n.jpg" width = "180" height = "300"  />
+<img src="./img/h_in_n.jpg" width = "180" height = "300" /> <img src="./img/h_out_n.jpg" width = "180" height = "300"  />
 
 
 ### 高度或宽度不够的话会影响显示数量 ###
@@ -64,8 +60,7 @@ compile 'com.ckenergy.stackcardlayoutmanager:stackcardlayoutmanager:1.0.1'
  * 1.less have 7 item
  * 2.more have 9 item
 <br/>
-<img src="./img/v_less.jpg" width = "300" height = "180" align=top />
-<img src="./img/v_c_exp.jpg" width = "180" height = "300"  /> 
+<img src="./img/v_less.jpg" width = "300" height = "180" align=top /> <img src="./img/v_c_exp.jpg" width = "180" height = "300"  /> 
 
 ### How to use? ###
 
