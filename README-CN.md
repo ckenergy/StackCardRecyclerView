@@ -35,8 +35,7 @@ compile 'com.ckenergy.stackcardlayoutmanager:stackcardlayoutmanager:1.0.1'
 
 ### 有竖直（Vertical）和水平（Horizontal） 两种类型###
 <br/> 
-<img src="./img/v_c_exp.jpg" width = "180" height = "300" />
-<img src="./img/h_out_n.jpg" width = "180" height = "300"  /> 
+<img src="./img/v_c_exp.jpg" width = "180" height = "300" /><img src="./img/h_out_n.jpg" width = "180" height = "300"  /> 
 
 ### 不管横向还是竖向都有卡片入栈和出栈堆叠模式(in stack and out stack) 和正反序排序模式(positive and negative) ###
 
@@ -45,12 +44,12 @@ compile 'com.ckenergy.stackcardlayoutmanager:stackcardlayoutmanager:1.0.1'
  * 1.正序, 入栈 
  * 2.正序, 出栈
 <br/>
-<img src="./img/h_in_p.jpg" width = "180" height = "300" />  <img src="./img/h_out_p.jpg" width = "180" height = "300"  />
+<img src="./img/h_in_p.jpg" width = "180" height = "300" /><img src="./img/h_out_p.jpg" width = "180" height = "300"  />
 
  * 3.反序, 入栈
  * 4.反序, 出栈
 <br/>
-<img src="./img/h_in_n.jpg" width = "180" height = "300" /> <img src="./img/h_out_n.jpg" width = "180" height = "300"  />
+<img src="./img/h_in_n.jpg" width = "180" height = "300" /><img src="./img/h_out_n.jpg" width = "180" height = "300"  />
 
 
 ### 高度或宽度不够的话会影响显示数量 ###
