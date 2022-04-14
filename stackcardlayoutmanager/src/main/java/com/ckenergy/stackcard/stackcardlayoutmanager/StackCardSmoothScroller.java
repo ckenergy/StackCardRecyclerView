@@ -1,11 +1,13 @@
 package com.ckenergy.stackcard.stackcardlayoutmanager;
 
 import android.content.Context;
-import android.support.v7.widget.LinearSmoothScroller;
 import android.view.View;
 
+import androidx.recyclerview.widget.LinearSmoothScroller;
+import androidx.recyclerview.widget.RecyclerView;
+
 /**
- * Custom implementation of {@link android.support.v7.widget.RecyclerView.SmoothScroller} that can work only with {@link StackCardLayoutManager}.
+ * Custom implementation of {@link RecyclerView.SmoothScroller} that can work only with {@link StackCardLayoutManager}.
  *
  * @see StackCardLayoutManager
  */

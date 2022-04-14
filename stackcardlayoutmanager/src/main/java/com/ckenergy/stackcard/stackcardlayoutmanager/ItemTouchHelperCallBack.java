@@ -2,11 +2,12 @@ package com.ckenergy.stackcard.stackcardlayoutmanager;
 
 import android.graphics.Rect;
 import android.os.Build;
-import android.support.v4.view.ViewCompat;
-import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.helper.ItemTouchHelper;
 import android.util.Log;
 import android.view.View;
+
+import androidx.core.view.ViewCompat;
+import androidx.recyclerview.widget.ItemTouchHelper;
+import androidx.recyclerview.widget.RecyclerView;
 
 /**
  * Created by chengkai on 2016/11/28.

@@ -1,7 +1,9 @@
 package com.ckenergy.stackcard.stackcardlayoutmanager;
 
 import android.os.Build;
-import android.support.annotation.NonNull;
+
+import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.RecyclerView;
 
 /**
  * Implementation of {@link StackCardLayoutManager.IPostLayout} that makes interesting scaling of items. <br />
@@ -40,7 +42,7 @@ public class StackCardPostLayout implements StackCardLayoutManager.IPostLayout {
      * make sure the childview is smaller than parent
      *
      * @param layoutManager         this
-     * @param orientation           layoutManager orientation {@link android.support.v7.widget.RecyclerView#getLayoutDirection()}
+     * @param orientation           layoutManager orientation {@link RecyclerView#getLayoutDirection()}
      * @return
      */
     @Override

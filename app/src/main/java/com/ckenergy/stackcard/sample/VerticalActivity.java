@@ -1,7 +1,8 @@
 package com.ckenergy.stackcard.sample;
 
 import android.os.Bundle;
-import android.support.v7.widget.RecyclerView;
+
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.ckenergy.stackcard.stackcardlayoutmanager.StackCardLayoutManager;
 import com.ckenergy.stackcard.stackcardlayoutmanager.StackCardPostLayout;
